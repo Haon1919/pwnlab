@@ -132,6 +132,7 @@ async def create_session(
                 network_name=network_name,
                 events_volume=volume_name,
                 session_id=session.id,
+                target_container_id=container_ids[0],
             )
             container_ids.append(sidecar_cid)
 

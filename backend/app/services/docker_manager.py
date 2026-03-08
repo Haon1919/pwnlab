@@ -126,6 +126,7 @@ class DockerManager:
         network_name: str,
         events_volume: str,
         session_id: str,
+        target_container_id: str,
     ) -> str:
         """Run wargame detection sidecar with NET_ADMIN capability."""
         try:
@@ -134,8 +135,10 @@ class DockerManager:
                 name=container_name,
                 detach=True,
                 remove=False,
-                cap_add=["NET_ADMIN"],
-                network=network_name,
+                cap_add=["NET_ADMIN", "AUDIT_CONTROL", "AUDIT_READ"],
+                network_mode=f"container:{target_container_id}",
+                pid_mode=f"container:{target_container_id}",
+                volumes_from=[target_container_id],
                 labels={"pwnlab": "true", "role": "sidecar"},
                 environment={"SESSION_ID": session_id},
                 volumes={events_volume: {"bind": "/events", "mode": "rw"}},

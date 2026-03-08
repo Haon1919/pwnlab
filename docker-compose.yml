@@ -1,6 +1,18 @@
 version: "3.9"
 
 services:
+  docker-proxy:
+    image: tecnativa/docker-socket-proxy
+    environment:
+      - CONTAINERS=1
+      - NETWORKS=1
+      - VOLUMES=1
+      - EXEC=1
+      - POST=1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
+
   backend:
     build:
       context: ./backend
@@ -11,8 +23,8 @@ services:
       - ./backend:/app
       - ./scenarios:/app/scenarios:ro
       - pwnlab-db:/app/data
-      - /var/run/docker.sock:/var/run/docker.sock
     environment:
+      - DOCKER_HOST=tcp://docker-proxy:2375
       - DATABASE_URL=sqlite:////app/data/pwnlab.db
       - SCENARIOS_PATH=/app/scenarios
       - SECRET_KEY=${SECRET_KEY:-changeme-in-production-use-32-chars}
@@ -20,6 +32,8 @@ services:
       - PWNLAB_ALLOWED_TARGET_IMAGES=${PWNLAB_ALLOWED_TARGET_IMAGES:-vulnerables/web-dvwa:latest,webgoat/goat-and-wolf:latest,pwnlab/target-metasploitable-lite:latest}
       - SESSION_TIMEOUT_HOURS=${SESSION_TIMEOUT_HOURS:-4}
       - DEBUG=${DEBUG:-false}
+    depends_on:
+      - docker-proxy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 10s

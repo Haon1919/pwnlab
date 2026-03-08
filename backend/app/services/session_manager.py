@@ -1,5 +1,6 @@
 import logging
 import random
+import asyncio
 from datetime import datetime
 from typing import Dict, Any, Optional
 from sqlmodel import Session, select
@@ -16,6 +17,7 @@ from app.config import settings
 
 logger = logging.getLogger(__name__)
 
+_session_creation_lock = asyncio.Lock()
 
 def allocate_session_offset(db: Session) -> int:
     """Find an unused subnet offset (1-254)."""
@@ -31,7 +33,6 @@ def allocate_session_offset(db: Session) -> int:
         raise RuntimeError("No available subnet offsets")
     return random.choice(available)
 
-
 def get_attacker_image(tool_profile: str, kali: bool, user: User) -> str:
     from app.dependencies import PLAN_LIMITS
     limits = PLAN_LIMITS.get(user.plan, PLAN_LIMITS["free"])
@@ -41,7 +42,6 @@ def get_attacker_image(tool_profile: str, kali: bool, user: User) -> str:
         return settings.PWNLAB_ATTACKER_KALI_IMAGE
     return settings.PWNLAB_ATTACKER_BASE_IMAGE
 
-
 async def create_session(
     scenario_id: str,
     user: User,
@@ -50,27 +50,28 @@ async def create_session(
     blackbox: bool = False,
 ) -> LabSession:
     """Orchestrate: load scenario -> allocate resources -> spin up Docker -> persist."""
-    # Load scenario
-    scenario_data = load_scenario_from_db_or_disk(scenario_id, db)
+    async with _session_creation_lock:
+        # Load scenario
+        scenario_data = load_scenario_from_db_or_disk(scenario_id, db)
 
-    # Allocate session offset
-    offset = allocate_session_offset(db)
+        # Allocate session offset
+        offset = allocate_session_offset(db)
 
-    # Apply offset to scenario
-    resolved = apply_session_offset(scenario_data, offset)
+        # Apply offset to scenario
+        resolved = apply_session_offset(scenario_data, offset)
 
-    # Create session record
-    session = LabSession(
-        user_id=user.id,
-        scenario_id=scenario_id,
-        status="starting",
-        mode="wargame" if wargame else "standard",
-        blackbox=blackbox,
-        session_offset=offset,
-    )
-    db.add(session)
-    db.commit()
-    db.refresh(session)
+        # Create session record
+        session = LabSession(
+            user_id=user.id,
+            scenario_id=scenario_id,
+            status="starting",
+            mode="wargame" if wargame else "standard",
+            blackbox=blackbox,
+            session_offset=offset,
+        )
+        db.add(session)
+        db.commit()
+        db.refresh(session)
 
     try:
         # Create Docker network

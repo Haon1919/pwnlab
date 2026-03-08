@@ -33,6 +33,7 @@ async def cleanup_stale_sessions():
     """APScheduler task: stop sessions older than SESSION_TIMEOUT_HOURS."""
     from app.models.session import LabSession
     from app.services.session_manager import stop_session
+    from app.services.docker_manager import docker_manager
     from datetime import datetime, timedelta
 
     cutoff = datetime.utcnow() - timedelta(hours=settings.SESSION_TIMEOUT_HOURS)
@@ -49,6 +50,21 @@ async def cleanup_stale_sessions():
                 await stop_session(session, db)
             except Exception as e:
                 logger.error(f"Error cleaning up session {session.id}: {e}")
+
+        # Garbage collect orphaned resources
+        active_sessions = db.exec(
+            select(LabSession).where(LabSession.status.in_(["starting", "running"]))
+        ).all()
+        active_session_ids = [s.id for s in active_sessions]
+        active_container_ids = []
+        for s in active_sessions:
+            active_container_ids.extend(s.container_ids)
+        
+        try:
+            docker_manager.cleanup_stale_sessions(active_container_ids)
+            docker_manager.cleanup_orphaned_resources(active_session_ids)
+        except Exception as e:
+            logger.error(f"Error during garbage collection: {e}")
 
 
 @asynccontextmanager

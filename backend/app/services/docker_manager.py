@@ -212,5 +212,31 @@ class DockerManager:
                 logger.info(f"Cleaning up stale container {c.name}")
                 self.stop_container(c.id)
 
+    def cleanup_orphaned_resources(self, active_session_ids: List[str]):
+        """Remove any pwnlab networks and volumes not associated with active sessions."""
+        # Cleanup networks
+        networks = self.client.networks.list(filters={"label": "pwnlab=true"})
+        for net in networks:
+            # Network names are like pwnlab-{session_id[:8]}
+            is_active = any(net.name.endswith(sid[:8]) for sid in active_session_ids)
+            if not is_active:
+                logger.info(f"Cleaning up orphaned network {net.name}")
+                try:
+                    net.remove()
+                except docker.errors.APIError as e:
+                    logger.error(f"Error removing orphaned network {net.name}: {e}")
+
+        # Cleanup volumes
+        volumes = self.client.volumes.list(filters={"label": "pwnlab=true"})
+        for vol in volumes:
+            # Volume names are like pwnlab-events-{session_id[:8]}
+            is_active = any(vol.name.endswith(sid[:8]) for sid in active_session_ids)
+            if not is_active:
+                logger.info(f"Cleaning up orphaned volume {vol.name}")
+                try:
+                    vol.remove()
+                except docker.errors.APIError as e:
+                    logger.error(f"Error removing orphaned volume {vol.name}: {e}")
+
 
 docker_manager = DockerManager()

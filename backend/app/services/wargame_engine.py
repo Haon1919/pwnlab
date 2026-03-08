@@ -60,7 +60,7 @@ def parse_fail2ban_line(line: str) -> Optional[Dict[str, Any]]:
         return None
 
     ip_match = re.search(r"Ban (\S+)", line)
-    jail_match = re.search(r"\[(\w+)\]", line)
+    jail_match = re.search(r"\[(\w+)\] Ban", line)
 
     return {
         "type": "fail2ban_ban",

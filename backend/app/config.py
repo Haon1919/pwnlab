@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     # Session
     SESSION_TIMEOUT_HOURS: int = 4
     MAX_SUBNET_OFFSET: int = 254
+    PWNLAB_BASE_SUBNET: str = "10.100"
 
     # Encryption key for Gemini API keys at rest
     FERNET_KEY: str = "ZmDfcTF7_60GrrY167zsiPd67pEvs0aGOv2oasOM1Pg="

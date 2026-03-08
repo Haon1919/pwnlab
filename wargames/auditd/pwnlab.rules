@@ -1,0 +1,15 @@
+# PwnLab auditd rules for detection
+# Monitor shell spawning by web server processes
+-w /bin/sh -p x -k shell_spawn_by_webserver
+-w /bin/bash -p x -k shell_spawn_by_webserver
+-w /bin/dash -p x -k shell_spawn_by_webserver
+-w /usr/bin/python3 -p x -k shell_spawn_by_webserver
+-w /usr/bin/perl -p x -k shell_spawn_by_webserver
+
+# Monitor /etc/passwd and /etc/shadow access
+-w /etc/passwd -p rwa -k sensitive_file_access
+-w /etc/shadow -p rwa -k sensitive_file_access
+
+# Monitor privilege escalation attempts
+-w /usr/bin/sudo -p x -k privilege_escalation
+-w /usr/bin/su -p x -k privilege_escalation

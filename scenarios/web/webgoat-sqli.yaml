@@ -1,0 +1,36 @@
+schema_version: "1.0"
+metadata:
+  id: "webgoat-sqli"
+  name: "WebGoat: SQL Injection Chain"
+  difficulty: "intermediate"
+  tags: ["web", "sqli", "java", "owasp"]
+  ai_generated: false
+
+network:
+  subnet: "10.100.{session_offset}.0/24"
+  internal: true
+
+targets:
+  - id: "webgoat"
+    image: "webgoat/goat-and-wolf:latest"
+    ip: "10.100.{session_offset}.10"
+    mem_limit: "768m"
+    cpu_quota: 75000
+
+attacker:
+  tool_profile: "web"
+  kali: false
+
+objectives:
+  - id: "flag-1"
+    description: "Complete the SQL injection lesson to extract user data"
+    validation:
+      method: "flag_string"
+      value: "PWNLAB{webgoat_sqli_complete}"
+  - id: "flag-2"
+    description: "Bypass authentication using SQL injection"
+    validation:
+      method: "flag_string"
+      value: "PWNLAB{webgoat_auth_bypass}"
+
+wargame: null

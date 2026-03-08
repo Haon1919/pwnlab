@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-950 text-gray-100 font-mono;
+  }
+}
+
+@layer components {
+  .terminal-card {
+    @apply bg-gray-900 border border-gray-800 rounded-lg p-4;
+  }
+
+  .btn-primary {
+    @apply bg-green-500 hover:bg-green-400 text-black font-bold py-2 px-4 rounded transition-colors;
+  }
+
+  .btn-danger {
+    @apply bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded transition-colors;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded transition-colors;
+  }
+
+  .input-terminal {
+    @apply bg-gray-800 border border-gray-700 text-gray-100 rounded px-3 py-2 w-full
+           focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500
+           placeholder-gray-500;
+  }
+
+  .badge-difficulty-beginner {
+    @apply bg-green-900 text-green-300 text-xs px-2 py-0.5 rounded;
+  }
+  .badge-difficulty-intermediate {
+    @apply bg-yellow-900 text-yellow-300 text-xs px-2 py-0.5 rounded;
+  }
+  .badge-difficulty-advanced {
+    @apply bg-orange-900 text-orange-300 text-xs px-2 py-0.5 rounded;
+  }
+  .badge-difficulty-expert {
+    @apply bg-red-900 text-red-300 text-xs px-2 py-0.5 rounded;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #111827; }
+::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #4b5563; }

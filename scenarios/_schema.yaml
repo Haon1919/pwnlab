@@ -1,0 +1,59 @@
+# PwnLab Scenario Schema v1.0
+# This file documents the canonical YAML schema for all PwnLab scenarios.
+# All scenarios (human-written or AI-generated) must conform to this schema.
+
+schema_version: "1.0"  # required
+
+metadata:
+  id: "unique-scenario-id"           # required; kebab-case; must be unique
+  name: "Human Readable Name"        # required
+  difficulty: "beginner"             # required; beginner|intermediate|advanced|expert
+  tags: ["web", "sqli"]              # required; list of strings
+  ai_generated: false                # optional; boolean
+
+network:
+  subnet: "10.100.{session_offset}.0/24"  # required; {session_offset} is replaced at runtime
+  internal: true                          # optional; default true = no internet access
+
+targets:                             # required; at least one
+  - id: "target-id"                  # required; used in env vars (TARGET_<ID>_IP)
+    image: "pwnlab/target-dvwa:latest"  # required; must be in ALLOWED_TARGET_IMAGES whitelist
+    ip: "10.100.{session_offset}.10"    # required; {session_offset} replaced at runtime
+    mem_limit: "512m"                    # optional; default 512m
+    cpu_quota: 50000                     # optional; default 50000
+
+attacker:
+  tool_profile: "web"               # required; web|network|crypto|full
+  kali: false                       # optional; requires pro+ plan
+
+objectives:                         # required; at least one
+  - id: "flag-1"                    # required; unique within scenario
+    description: "Get admin access" # optional
+    validation:
+      method: "flag_string"         # required; currently only flag_string supported
+      value: "PWNLAB{flag_here}"   # required; flag to submit
+
+# wargame block is null/absent for standard scenarios
+wargame: null
+# OR for wargame scenarios:
+# wargame:
+#   enabled: true
+#   detection_rules:
+#     portscan:
+#       backend: "iptables"         # iptables|fail2ban|auditd
+#       threshold:
+#         new_ports_per_minute: 20
+#       severity: "warning"         # warning|detected|busted
+#     bruteforce:
+#       backend: "fail2ban"
+#       config: "pwnlab-bruteforce.conf"
+#       severity: "detected"
+#     shell_spawn_by_webserver:
+#       backend: "auditd"
+#       trigger: "uid=www-data spawning /bin/sh"
+#       severity: "busted"
+#   detection_thresholds:
+#     warning_score: 10
+#     detected_score: 40
+#     busted_score: 100
+#   polling_interval_seconds: 5

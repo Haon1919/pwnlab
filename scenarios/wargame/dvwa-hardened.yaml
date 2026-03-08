@@ -1,0 +1,51 @@
+schema_version: "1.0"
+metadata:
+  id: "dvwa-hardened"
+  name: "DVWA: SQL Injection (Detection Active)"
+  difficulty: "intermediate"
+  tags: ["web", "sqli", "stealth", "wargame"]
+  ai_generated: false
+
+network:
+  subnet: "10.100.{session_offset}.0/24"
+  internal: true
+
+targets:
+  - id: "dvwa"
+    image: "vulnerables/web-dvwa:latest"
+    ip: "10.100.{session_offset}.10"
+    mem_limit: "512m"
+    cpu_quota: 50000
+
+attacker:
+  tool_profile: "web"
+  kali: false
+
+objectives:
+  - id: "flag-1"
+    description: "Exploit SQL injection while staying undetected"
+    validation:
+      method: "flag_string"
+      value: "PWNLAB{stealth_sqli_success}"
+
+wargame:
+  enabled: true
+  detection_rules:
+    portscan:
+      backend: "iptables"
+      threshold:
+        new_ports_per_minute: 20
+      severity: "warning"
+    bruteforce:
+      backend: "fail2ban"
+      config: "pwnlab-bruteforce.conf"
+      severity: "detected"
+    shell_spawn_by_webserver:
+      backend: "auditd"
+      trigger: "uid=www-data spawning /bin/sh"
+      severity: "busted"
+  detection_thresholds:
+    warning_score: 10
+    detected_score: 40
+    busted_score: 100
+  polling_interval_seconds: 5

@@ -1,0 +1,36 @@
+schema_version: "1.0"
+metadata:
+  id: "metasploitable-vsftpd"
+  name: "Metasploitable: vsftpd Backdoor"
+  difficulty: "beginner"
+  tags: ["network", "ftp", "exploit", "metasploit"]
+  ai_generated: false
+
+network:
+  subnet: "10.100.{session_offset}.0/24"
+  internal: true
+
+targets:
+  - id: "msf"
+    image: "pwnlab/target-metasploitable-lite:latest"
+    ip: "10.100.{session_offset}.10"
+    mem_limit: "512m"
+    cpu_quota: 50000
+
+attacker:
+  tool_profile: "network"
+  kali: false
+
+objectives:
+  - id: "flag-1"
+    description: "Exploit the vsftpd backdoor to gain a shell"
+    validation:
+      method: "flag_string"
+      value: "PWNLAB{vsftpd_backdoor_shell}"
+  - id: "flag-2"
+    description: "Escalate to root and read /root/flag.txt"
+    validation:
+      method: "flag_string"
+      value: "PWNLAB{root_flag_captured}"
+
+wargame: null

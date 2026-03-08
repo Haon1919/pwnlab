@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - ./scenarios:/app/scenarios:ro
+      - pwnlab-db:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DATABASE_URL=sqlite:////app/data/pwnlab.db
+      - SCENARIOS_PATH=/app/scenarios
+      - SECRET_KEY=${SECRET_KEY:-changeme-in-production-use-32-chars}
+      - FERNET_KEY=${FERNET_KEY:-ZmDfcTF7_60GrrY167zsiPd67pEvs0aGOv2oasOM1Pg=}
+      - PWNLAB_ALLOWED_TARGET_IMAGES=${PWNLAB_ALLOWED_TARGET_IMAGES:-vulnerables/web-dvwa:latest,webgoat/goat-and-wolf:latest,pwnlab/target-metasploitable-lite:latest}
+      - SESSION_TIMEOUT_HOURS=${SESSION_TIMEOUT_HOURS:-4}
+      - DEBUG=${DEBUG:-false}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pwnlab-db:
+    name: pwnlab-db

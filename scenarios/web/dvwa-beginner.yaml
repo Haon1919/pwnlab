@@ -1,0 +1,36 @@
+schema_version: "1.0"
+metadata:
+  id: "dvwa-beginner"
+  name: "DVWA: SQL Injection Fundamentals"
+  difficulty: "beginner"
+  tags: ["web", "sqli", "xss", "php"]
+  ai_generated: false
+
+network:
+  subnet: "10.100.{session_offset}.0/24"
+  internal: true
+
+targets:
+  - id: "dvwa"
+    image: "vulnerables/web-dvwa:latest"
+    ip: "10.100.{session_offset}.10"
+    mem_limit: "512m"
+    cpu_quota: 50000
+
+attacker:
+  tool_profile: "web"
+  kali: false
+
+objectives:
+  - id: "flag-1"
+    description: "Exploit SQL injection to retrieve admin credentials"
+    validation:
+      method: "flag_string"
+      value: "PWNLAB{dvwa_admin_pwned}"
+  - id: "flag-2"
+    description: "Execute stored XSS to steal a session"
+    validation:
+      method: "flag_string"
+      value: "PWNLAB{xss_session_stolen}"
+
+wargame: null

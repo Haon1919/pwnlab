@@ -26,7 +26,7 @@ objectives:
     description: "Exploit SQL injection while staying undetected"
     validation:
       method: "flag_string"
-      value: "PWNLAB{stealth_sqli_success}"
+      value: "BLAQLIQ{stealth_sqli_success}"
 
 wargame:
   enabled: true
@@ -38,7 +38,7 @@ wargame:
       severity: "warning"
     bruteforce:
       backend: "fail2ban"
-      config: "pwnlab-bruteforce.conf"
+      config: "blaqliq-bruteforce.conf"
       severity: "detected"
     shell_spawn_by_webserver:
       backend: "auditd"

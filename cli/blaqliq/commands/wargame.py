@@ -6,7 +6,7 @@ from rich.table import Table
 from rich.live import Live
 from rich.progress import Progress, BarColumn, TextColumn, SpinnerColumn
 from rich import box
-from pwnlab.api_client import PwnLabClient, APIError
+from blaqliq.api_client import BlaqLiqClient, APIError
 
 console = Console()
 
@@ -64,7 +64,7 @@ def wargame():
 @click.option("--watch", is_flag=True, help="Live-refresh every 5 seconds")
 def wargame_status(session_id, watch):
     """Show war games detection status for SESSION_ID."""
-    client = PwnLabClient()
+    client = BlaqLiqClient()
 
     if not watch:
         try:

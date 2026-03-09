@@ -3,7 +3,7 @@ import yaml
 from pathlib import Path
 from typing import Optional
 
-CONFIG_DIR = Path.home() / ".pwnlab"
+CONFIG_DIR = Path.home() / ".blaqliq"
 CONFIG_FILE = CONFIG_DIR / "config.yaml"
 DEFAULT_API_URL = "http://localhost:8000"
 

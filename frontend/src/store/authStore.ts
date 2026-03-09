@@ -25,6 +25,6 @@ export const useAuthStore = create<AuthState>()(
       setUser: (user) => set({ user }),
       logout: () => set({ token: null, user: null }),
     }),
-    { name: 'pwnlab-auth' }
+    { name: 'blaqliq-auth' }
   )
 )

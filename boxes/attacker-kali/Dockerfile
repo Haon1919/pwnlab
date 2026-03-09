@@ -1,7 +1,7 @@
 FROM kalilinux/kali-rolling:latest
 
-LABEL maintainer="pwnlab" \
-      description="PwnLab Kali Linux attacker image"
+LABEL maintainer="blaqliq" \
+      description="BlaqLiq Kali Linux attacker image"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nmap nikto sqlmap hydra \

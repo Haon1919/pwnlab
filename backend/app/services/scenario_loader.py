@@ -148,7 +148,7 @@ def load_scenario_from_db_or_disk(scenario_id: str, db=None) -> Dict[str, Any]:
 
 def resolve_template(template: str, session_offset: int) -> str:
     """Replace {session_offset} template variables."""
-    template = template.replace("10.100", settings.PWNLAB_BASE_SUBNET)
+    template = template.replace("10.100", settings.BLAQLIQ_BASE_SUBNET)
     return template.replace("{session_offset}", str(session_offset))
 
 

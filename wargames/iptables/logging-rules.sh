@@ -1,13 +1,13 @@
 #!/bin/bash
-# PwnLab iptables detection logging rules template
+# BlaqLiq iptables detection logging rules template
 # Applied by the wargame sidecar container
 
 set -e
 
-CHAIN="PWNLAB-DETECT"
-LOG_PREFIX="PWNLAB-DETECT "
+CHAIN="BLAQLIQ-DETECT"
+LOG_PREFIX="BLAQLIQ-DETECT "
 
-echo "[pwnlab-iptables] Setting up detection rules..."
+echo "[blaqliq-iptables] Setting up detection rules..."
 
 # Create detection chain
 iptables -N "$CHAIN" 2>/dev/null || iptables -F "$CHAIN"
@@ -29,12 +29,12 @@ iptables -A "$CHAIN" -j RETURN
 # Hook into INPUT chain
 iptables -I INPUT 1 -j "$CHAIN"
 
-echo "[pwnlab-iptables] Detection rules installed"
+echo "[blaqliq-iptables] Detection rules installed"
 
 # Apply rate-based port scan detection
 iptables -A INPUT -m recent --name portscan --rcheck --seconds 60 --hitcount 20 \
-    -j LOG --log-prefix "PWNLAB-PORTSCAN-ALERT " || true
+    -j LOG --log-prefix "BLAQLIQ-PORTSCAN-ALERT " || true
 
 iptables -A INPUT -m state --state NEW -m recent --name portscan --set || true
 
-echo "[pwnlab-iptables] Rate limiting rules installed"
+echo "[blaqliq-iptables] Rate limiting rules installed"

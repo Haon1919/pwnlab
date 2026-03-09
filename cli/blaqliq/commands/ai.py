@@ -3,7 +3,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.syntax import Syntax
 from rich import box
-from pwnlab.api_client import PwnLabClient, APIError
+from blaqliq.api_client import BlaqLiqClient, APIError
 
 console = Console()
 
@@ -24,9 +24,9 @@ def ai():
 def generate(prompt, difficulty, tags, wargame, api_key, start):
     """Generate a scenario using Gemini AI.
 
-    Example: pwnlab ai generate "PHP app with SQL injection and weak creds"
+    Example: blaqliq ai generate "PHP app with SQL injection and weak creds"
     """
-    client = PwnLabClient()
+    client = BlaqLiqClient()
     tag_list = [t.strip() for t in tags.split(",") if t.strip()]
 
     with console.status("[bold]Generating scenario with Gemini...[/bold]"):
@@ -67,9 +67,9 @@ def blackbox(novel):
     """Start a blackbox session with a hidden target.
 
     Target info is hidden — you must discover it via nmap.
-    Run 'pwnlab ai reveal <session_id>' after stopping to see what it was.
+    Run 'blaqliq ai reveal <session_id>' after stopping to see what it was.
     """
-    client = PwnLabClient()
+    client = BlaqLiqClient()
 
     with console.status("[bold]Starting blackbox session...[/bold]"):
         try:
@@ -84,10 +84,10 @@ def blackbox(novel):
 [bold yellow]{result['message']}[/bold yellow]
 
 [dim]The target is hidden. Discover it with:[/dim]
-  docker exec -it pwnlab-attacker-{result['session_id'][:8]} nmap -sn 10.100.0.0/16
+  docker exec -it blaqliq-attacker-{result['session_id'][:8]} nmap -sn 10.100.0.0/16
 
 [dim]To reveal after stopping:[/dim]
-  pwnlab ai reveal {result['session_id']}"""
+  blaqliq ai reveal {result['session_id']}"""
 
     console.print(Panel(panel_content, title="[bold]Blackbox Session[/bold]", box=box.ROUNDED))
 
@@ -96,7 +96,7 @@ def blackbox(novel):
 @click.argument("session_id")
 def reveal(session_id):
     """Reveal the target for a blackbox session (after stopping)."""
-    client = PwnLabClient()
+    client = BlaqLiqClient()
     try:
         result = client.reveal_blackbox(session_id)
     except APIError as e:

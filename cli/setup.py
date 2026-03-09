@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="pwnlab",
+    name="blaqliq",
     version="1.0.0",
     packages=find_packages(),
     install_requires=[
@@ -13,7 +13,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "pwnlab=pwnlab.main:cli",
+            "blaqliq=blaqliq.main:cli",
         ],
     },
 )

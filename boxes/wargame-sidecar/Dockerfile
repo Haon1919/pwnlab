@@ -1,7 +1,7 @@
 FROM debian:bookworm-slim
 
-LABEL maintainer="pwnlab" \
-      description="PwnLab wargame detection sidecar"
+LABEL maintainer="blaqliq" \
+      description="BlaqLiq wargame detection sidecar"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     iptables \
@@ -18,7 +18,7 @@ COPY iptables-logger.sh /usr/local/bin/iptables-logger.sh
 COPY fail2ban-monitor.sh /usr/local/bin/fail2ban-monitor.sh
 COPY auditd-monitor.sh /usr/local/bin/auditd-monitor.sh
 COPY sidecar.sh /usr/local/bin/sidecar.sh
-COPY pwnlab.conf /etc/fail2ban/jail.d/pwnlab.conf
+COPY blaqliq.conf /etc/fail2ban/jail.d/blaqliq.conf
 
 RUN chmod +x /usr/local/bin/*.sh
 

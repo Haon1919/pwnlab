@@ -19,7 +19,7 @@ def test_score_to_level():
     assert score_to_level(150) == "busted"
 
 def test_parse_iptables_line():
-    line = "Mar  8 12:00:00 kernel: [12345.6789] PWNLAB-DETECT: IN=eth0 OUT= MAC=... SRC=10.100.1.100 DST=10.100.1.10 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=12345 DF PROTO=TCP SPT=54321 DPT=80 WINDOW=65535 RES=0x00 SYN URGP=0"
+    line = "Mar  8 12:00:00 kernel: [12345.6789] BLAQLIQ-DETECT: IN=eth0 OUT= MAC=... SRC=10.100.1.100 DST=10.100.1.10 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=12345 DF PROTO=TCP SPT=54321 DPT=80 WINDOW=65535 RES=0x00 SYN URGP=0"
     event = parse_iptables_line(line)
     
     assert event is not None

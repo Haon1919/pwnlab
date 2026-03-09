@@ -58,7 +58,7 @@ export default function Login() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 text-green-400 text-2xl font-bold mb-2">
             <Shield size={28} />
-            PwnLab
+            BlaqLiq
           </div>
           <p className="text-gray-500 text-sm">Docker Security Lab Platform</p>
         </div>
@@ -124,7 +124,7 @@ export default function Login() {
 
           <p className="text-xs text-gray-600 text-center mt-4">
             <Terminal size={10} className="inline mr-1" />
-            CLI: <code className="text-gray-500">pwnlab auth login</code>
+            CLI: <code className="text-gray-500">blaqliq auth login</code>
           </p>
         </div>
       </div>

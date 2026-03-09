@@ -49,7 +49,7 @@ export default function WargameView() {
           </div>
           <div className="bg-gray-950 rounded p-3 font-mono text-xs text-gray-400">
             <div className="text-green-600"># Stay stealthy. Avoid aggressive scans.</div>
-            <div>$ docker exec -it pwnlab-attacker-{session.id.slice(0, 8)} bash</div>
+            <div>$ docker exec -it blaqliq-attacker-{session.id.slice(0, 8)} bash</div>
             <div className="text-yellow-600"># nmap -T1 (slow) instead of nmap -T4 (aggressive)</div>
           </div>
         </div>

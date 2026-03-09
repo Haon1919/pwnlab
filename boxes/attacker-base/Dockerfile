@@ -1,7 +1,7 @@
 FROM debian:bookworm-slim
 
-LABEL maintainer="pwnlab" \
-      description="PwnLab attacker base image"
+LABEL maintainer="blaqliq" \
+      description="BlaqLiq attacker base image"
 
 ARG TOOL_PROFILE=web
 

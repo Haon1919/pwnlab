@@ -1,12 +1,12 @@
-# PwnLab
+# BlaqLiq
 
 A self-hosted penetration testing lab platform. Spin up deliberately vulnerable Docker containers, attack them from a pre-tooled attacker container, optionally enable a deterministic detection system (war games mode), and use Gemini AI to generate custom scenarios or launch blind blackbox challenges.
 
 ```
-pwnlab session start dvwa-beginner
-pwnlab session start dvwa-hardened --wargame
-pwnlab ai generate "PHP app with SQL injection and weak admin creds"
-pwnlab ai blackbox
+blaqliq session start dvwa-beginner
+blaqliq session start dvwa-hardened --wargame
+blaqliq ai generate "PHP app with SQL injection and weak admin creds"
+blaqliq ai blackbox
 ```
 
 ---
@@ -39,7 +39,7 @@ pwnlab ai blackbox
 
 ## Overview
 
-PwnLab runs entirely on your own machine (or server). Each lab session gets:
+BlaqLiq runs entirely on your own machine (or server). Each lab session gets:
 
 - An **isolated Docker bridge network** with its own subnet (`10.100.{n}.0/24`)
 - One or more **target containers** (vulnerable apps/services)
@@ -57,7 +57,7 @@ Sessions are time-limited (default 4 hours), fully isolated from each other, and
 │                      Your Machine                        │
 │                                                         │
 │  ┌─────────┐   REST API   ┌──────────────────────────┐  │
-│  │ pwnlab  │ ──────────── │  FastAPI Backend          │  │
+│  │ blaqliq  │ ──────────── │  FastAPI Backend          │  │
 │  │  CLI    │              │  SQLite · APScheduler     │  │
 │  └─────────┘              └────────────┬─────────────┘  │
 │                                        │ docker-py       │
@@ -105,8 +105,8 @@ docker pull webgoat/goat-and-wolf:latest
 
 ```bash
 # 1. Clone
-git clone https://github.com/yourname/pwnlab
-cd pwnlab
+git clone https://github.com/yourname/blaqliq
+cd blaqliq
 
 # 2. Configure
 cp .env.example .env
@@ -119,14 +119,14 @@ make dev
 make install-cli
 
 # 5. Register and log in
-pwnlab auth register
-pwnlab auth login
+blaqliq auth register
+blaqliq auth login
 
 # 6. List available scenarios
-pwnlab session list
+blaqliq session list
 
 # 7. Start a lab
-pwnlab session start dvwa-beginner
+blaqliq session start dvwa-beginner
 ```
 
 The backend API is at `http://localhost:8000` and the web UI at `http://localhost:3000`.
@@ -138,49 +138,49 @@ The backend API is at `http://localhost:8000` and the web UI at `http://localhos
 ### Authentication
 
 ```bash
-pwnlab auth register             # create account
-pwnlab auth login                # login (saves token to ~/.pwnlab/config.yaml)
-pwnlab auth logout
-pwnlab auth whoami
-pwnlab auth create-key --label ci   # create API key (shown once, never stored raw)
+blaqliq auth register             # create account
+blaqliq auth login                # login (saves token to ~/.blaqliq/config.yaml)
+blaqliq auth logout
+blaqliq auth whoami
+blaqliq auth create-key --label ci   # create API key (shown once, never stored raw)
 ```
 
 ### Sessions
 
 ```bash
 # List available scenarios
-pwnlab session list
+blaqliq session list
 
 # Start a standard session
-pwnlab session start dvwa-beginner
+blaqliq session start dvwa-beginner
 
 # Start with war games detection active
-pwnlab session start dvwa-hardened --wargame
+blaqliq session start dvwa-hardened --wargame
 
 # Start a blackbox session (target is hidden)
-pwnlab session start dvwa-beginner --blackbox
+blaqliq session start dvwa-beginner --blackbox
 
 # Show all your sessions
-pwnlab session status
+blaqliq session status
 
 # Show a specific session
-pwnlab session status <session-id>
+blaqliq session status <session-id>
 
 # Submit a flag
-pwnlab session flag <session-id> "PWNLAB{...}" --objective flag-1
+blaqliq session flag <session-id> "BLAQLIQ{...}" --objective flag-1
 
 # Stop a session
-pwnlab session stop <session-id>
+blaqliq session stop <session-id>
 
 # Convenience aliases (same as session start/stop)
-pwnlab start dvwa-beginner
-pwnlab stop <session-id>
+blaqliq start dvwa-beginner
+blaqliq stop <session-id>
 ```
 
 Once a session is running, connect to the attacker container:
 
 ```bash
-docker exec -it pwnlab-attacker-<session-id-prefix> bash
+docker exec -it blaqliq-attacker-<session-id-prefix> bash
 ```
 
 The target IP is printed on start and also set as an environment variable inside the attacker (`TARGET_DVWA_IP`, `TARGET_WEBGOAT_IP`, etc.).
@@ -189,10 +189,10 @@ The target IP is printed on start and also set as an environment variable inside
 
 ```bash
 # Show detection status once
-pwnlab wargame status <session-id>
+blaqliq wargame status <session-id>
 
 # Live-refresh every 5 seconds (Ctrl+C to stop)
-pwnlab wargame status <session-id> --watch
+blaqliq wargame status <session-id> --watch
 ```
 
 The stealth meter displays:
@@ -208,22 +208,22 @@ Thresholds: CLEAN<10 | WARNING≥10 | DETECTED≥40 | BUSTED≥100
 
 ```bash
 # Generate a scenario with Gemini
-pwnlab ai generate "vulnerable SSH server with default creds and a backdoored FTP service"
-pwnlab ai generate "PHP app with SQLi" --difficulty intermediate --tags web,sqli --wargame
+blaqliq ai generate "vulnerable SSH server with default creds and a backdoored FTP service"
+blaqliq ai generate "PHP app with SQLi" --difficulty intermediate --tags web,sqli --wargame
 
 # Start immediately after generating
-pwnlab ai generate "..." --start
+blaqliq ai generate "..." --start
 
 # Blackbox mode — target is hidden, discover it with nmap
-pwnlab ai blackbox
+blaqliq ai blackbox
 
 # After stopping a blackbox session, reveal what the target was
-pwnlab ai reveal <session-id>
+blaqliq ai reveal <session-id>
 ```
 
 ### Config
 
-The CLI stores its state in `~/.pwnlab/config.yaml`:
+The CLI stores its state in `~/.blaqliq/config.yaml`:
 
 ```yaml
 api_url: http://localhost:8000
@@ -233,7 +233,7 @@ token: eyJ...
 You can point the CLI at a remote server:
 
 ```bash
-pwnlab auth login --url https://your-pwnlab-server.com
+blaqliq auth login --url https://your-blaqliq-server.com
 ```
 
 ---
@@ -273,7 +273,7 @@ make scenario NEW=my-custom-lab
 vim scenarios/custom/my-custom-lab.yaml
 
 # Run it
-pwnlab session start my-custom-lab
+blaqliq session start my-custom-lab
 ```
 
 Or upload via the API:
@@ -304,7 +304,7 @@ network:
 
 targets:
   - id: "dvwa"
-    image: "vulnerables/web-dvwa:latest"   # must be in PWNLAB_ALLOWED_TARGET_IMAGES
+    image: "vulnerables/web-dvwa:latest"   # must be in BLAQLIQ_ALLOWED_TARGET_IMAGES
     ip: "10.100.{session_offset}.10"
     mem_limit: "512m"
     cpu_quota: 50000
@@ -318,12 +318,12 @@ objectives:
     description: "Exploit SQLi to retrieve admin creds"
     validation:
       method: "flag_string"
-      value: "PWNLAB{your_flag_here}"
+      value: "BLAQLIQ{your_flag_here}"
 
 wargame: null   # see War Games section for the full block
 ```
 
-**Security constraint**: the `image` field for every target must be in the `PWNLAB_ALLOWED_TARGET_IMAGES` whitelist (set in `.env`). This is enforced for both hand-written and AI-generated scenarios before any container is ever run.
+**Security constraint**: the `image` field for every target must be in the `BLAQLIQ_ALLOWED_TARGET_IMAGES` whitelist (set in `.env`). This is enforced for both hand-written and AI-generated scenarios before any container is ever run.
 
 ---
 
@@ -368,13 +368,13 @@ AI features require a [Google Gemini API key](https://aistudio.google.com/app/ap
 Store your key on registration:
 
 ```bash
-pwnlab auth register --gemini-key AIza...
+blaqliq auth register --gemini-key AIza...
 ```
 
 Or pass it per-command:
 
 ```bash
-pwnlab ai generate "..." --api-key AIza...
+blaqliq ai generate "..." --api-key AIza...
 ```
 
 Keys are **Fernet-encrypted at rest** in the database. The raw key is never stored.
@@ -384,9 +384,9 @@ Keys are **Fernet-encrypted at rest** in the database. The raw key is never stor
 Gemini is called **once at generation time** to produce a scenario YAML. The output is validated against the schema and image whitelist before being saved. If validation fails, the scenario is rejected — no containers are ever run from an invalid scenario.
 
 ```bash
-pwnlab ai generate "Apache server running PHP 5.6 with remote code execution via file upload"
-pwnlab ai generate "MySQL 5.5 exposed on network with root/root creds" --difficulty beginner --tags network,sql
-pwnlab ai generate "XSS + CSRF chain in a Node.js app" --wargame --difficulty advanced
+blaqliq ai generate "Apache server running PHP 5.6 with remote code execution via file upload"
+blaqliq ai generate "MySQL 5.5 exposed on network with root/root creds" --difficulty beginner --tags network,sql
+blaqliq ai generate "XSS + CSRF chain in a Node.js app" --wargame --difficulty advanced
 ```
 
 Generated scenarios are saved to your account and appear in the scenario library.
@@ -396,14 +396,14 @@ Generated scenarios are saved to your account and appear in the scenario library
 Blackbox mode picks a random wargame-capable scenario without revealing which one it is. The attacker container gets no `TARGET_*` environment variables. You must discover the target yourself.
 
 ```bash
-pwnlab ai blackbox
+blaqliq ai blackbox
 
 # Inside attacker container:
 nmap -sn 10.100.0.0/16   # discover the subnet
 nmap -sV <discovered-ip>  # fingerprint services
 
 # After you stop the session, reveal the answer:
-pwnlab ai reveal <session-id>
+blaqliq ai reveal <session-id>
 ```
 
 ---
@@ -414,10 +414,10 @@ pwnlab ai reveal <session-id>
 
 | Image | Description |
 |-------|-------------|
-| `pwnlab/attacker-base:latest` | Debian slim with tool profile `web` (nikto, dirb, sqlmap, curl, nmap) |
-| `pwnlab/attacker-base:network` | + hydra, masscan, medusa, tcpdump |
-| `pwnlab/attacker-base:crypto` | + hashcat, john, openssl |
-| `pwnlab/attacker-kali:latest` | Full Kali Rolling (pro+ plan only) |
+| `blaqliq/attacker-base:latest` | Debian slim with tool profile `web` (nikto, dirb, sqlmap, curl, nmap) |
+| `blaqliq/attacker-base:network` | + hydra, masscan, medusa, tcpdump |
+| `blaqliq/attacker-base:crypto` | + hashcat, john, openssl |
+| `blaqliq/attacker-kali:latest` | Full Kali Rolling (pro+ plan only) |
 
 Build them:
 
@@ -432,13 +432,13 @@ make build-kali        # builds Kali image (large, optional)
 |-------|------------|
 | `vulnerables/web-dvwa:latest` | DVWA (Damn Vulnerable Web App) — SQLi, XSS, CSRF, etc. |
 | `webgoat/goat-and-wolf:latest` | WebGoat — OWASP training app |
-| `pwnlab/target-metasploitable-lite:latest` | Lightweight Metasploitable-style box (SSH, vsftpd, Apache) |
+| `blaqliq/target-metasploitable-lite:latest` | Lightweight Metasploitable-style box (SSH, vsftpd, Apache) |
 
 ### Wargame Sidecar
 
-`pwnlab/wargame-sidecar:latest` runs alongside the target on the session network. It:
+`blaqliq/wargame-sidecar:latest` runs alongside the target on the session network. It:
 
-1. Installs iptables logging rules (`PWNLAB-DETECT` chain)
+1. Installs iptables logging rules (`BLAQLIQ-DETECT` chain)
 2. Monitors fail2ban ban events
 3. Tails auditd for shell-spawn events
 4. Writes normalized JSONL to a shared Docker volume every 5 seconds
@@ -493,9 +493,9 @@ All config is via environment variables. Copy `.env.example` to `.env` and edit:
 |----------|---------|-------------|
 | `SECRET_KEY` | *(must change)* | JWT signing key — use a random 32+ char string |
 | `FERNET_KEY` | *(must change)* | Encryption key for Gemini API keys at rest |
-| `PWNLAB_ALLOWED_TARGET_IMAGES` | dvwa, webgoat, msf-lite | Comma-separated image whitelist |
+| `BLAQLIQ_ALLOWED_TARGET_IMAGES` | dvwa, webgoat, msf-lite | Comma-separated image whitelist |
 | `SESSION_TIMEOUT_HOURS` | `4` | Sessions older than this are auto-stopped |
-| `DATABASE_URL` | `sqlite:///./pwnlab.db` | SQLite path (swap for Postgres in prod) |
+| `DATABASE_URL` | `sqlite:///./blaqliq.db` | SQLite path (swap for Postgres in prod) |
 | `JWT_EXPIRE_MINUTES` | `1440` | Token lifetime (24h) |
 | `DEBUG` | `false` | Never `true` in production |
 | `GEMINI_MODEL` | `gemini-1.5-flash` | Gemini model for AI generation |
@@ -514,7 +514,7 @@ python3 -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().
 
 ## Plan Limits
 
-PwnLab ships with three plan tiers (free by default). These are enforced server-side.
+BlaqLiq ships with three plan tiers (free by default). These are enforced server-side.
 
 | | free | pro | enterprise |
 |--|------|-----|------------|
@@ -543,9 +543,9 @@ with Session(engine) as db:
 
 ## Security Model
 
-PwnLab is designed to be self-hosted. A few things to understand before exposing it:
+BlaqLiq is designed to be self-hosted. A few things to understand before exposing it:
 
-**Image whitelist**: Only images listed in `PWNLAB_ALLOWED_TARGET_IMAGES` can be used as targets. This is enforced in `scenario_loader.py` before any `docker run` call, including for Gemini-generated scenarios. Do not add production images to this list.
+**Image whitelist**: Only images listed in `BLAQLIQ_ALLOWED_TARGET_IMAGES` can be used as targets. This is enforced in `scenario_loader.py` before any `docker run` call, including for Gemini-generated scenarios. Do not add production images to this list.
 
 **Network isolation**: Every session gets its own Docker bridge network. By default `internal: true` in scenario YAML means containers have no internet access. Set `internal: false` only when a scenario explicitly requires it (e.g. downloading exploit dependencies).
 
@@ -591,15 +591,15 @@ make test-api
 
 1. Scaffold: `make scenario NEW=my-lab`
 2. Edit `scenarios/custom/my-lab.yaml`
-3. Validate: `pwnlab session start my-lab` (the loader validates on start)
-4. Add target flags to the YAML `objectives` block with `PWNLAB{...}` format
+3. Validate: `blaqliq session start my-lab` (the loader validates on start)
+4. Add target flags to the YAML `objectives` block with `BLAQLIQ{...}` format
 5. Optionally add a `wargame:` block (see `scenarios/wargame/dvwa-hardened.yaml` for reference)
 
 ### Adding a New Target Box
 
 1. Create `boxes/target-mybox/Dockerfile`
-2. Build: `docker build -t pwnlab/target-mybox:latest ./boxes/target-mybox/`
-3. Add `pwnlab/target-mybox:latest` to `PWNLAB_ALLOWED_TARGET_IMAGES` in `.env`
+2. Build: `docker build -t blaqliq/target-mybox:latest ./boxes/target-mybox/`
+3. Add `blaqliq/target-mybox:latest` to `BLAQLIQ_ALLOWED_TARGET_IMAGES` in `.env`
 4. Reference it in a scenario YAML
 
 ---
@@ -607,7 +607,7 @@ make test-api
 ## Project Structure
 
 ```
-pwnlab/
+blaqliq/
 ├── docker-compose.yml          # dev stack: backend + frontend + sqlite volume
 ├── Makefile                    # make dev, build, scenario, install-cli, clean
 ├── .env.example                # environment variable template
@@ -639,9 +639,9 @@ pwnlab/
 │       └── store/              # Zustand: authStore, sessionStore
 │
 ├── cli/
-│   └── pwnlab/
+│   └── blaqliq/
 │       ├── main.py             # click group root
-│       ├── config.py           # ~/.pwnlab/config.yaml
+│       ├── config.py           # ~/.blaqliq/config.yaml
 │       ├── api_client.py       # httpx wrapper
 │       └── commands/           # auth, session, wargame, ai
 │

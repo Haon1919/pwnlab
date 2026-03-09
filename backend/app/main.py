@@ -97,7 +97,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="PwnLab API",
+    title="BlaqLiq API",
     description="Docker-based penetration testing lab platform",
     version="1.0.0",
     lifespan=lifespan,

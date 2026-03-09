@@ -1,7 +1,7 @@
 #!/bin/bash
 # Monitor fail2ban for bans and emit JSONL events
 
-STATUS_FILE="/tmp/pwnlab-fail2ban-seen"
+STATUS_FILE="/tmp/blaqliq-fail2ban-seen"
 touch "$STATUS_FILE"
 
 if ! command -v fail2ban-client &>/dev/null; then

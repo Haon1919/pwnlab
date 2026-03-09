@@ -1,9 +1,9 @@
 import click
 from rich.console import Console
-from pwnlab.commands.auth import auth
-from pwnlab.commands.session import session
-from pwnlab.commands.wargame import wargame
-from pwnlab.commands.ai import ai
+from blaqliq.commands.auth import auth
+from blaqliq.commands.session import session
+from blaqliq.commands.wargame import wargame
+from blaqliq.commands.ai import ai
 
 console = Console()
 
@@ -11,14 +11,14 @@ console = Console()
 @click.version_option(version="1.0.0")
 def cli():
     """
-    PwnLab - Docker Security Lab Platform
+    BlaqLiq - Docker Security Lab Platform
 
     Spin up vulnerable containers, attack them, and level up your pentesting skills.
 
     Quick start:
-      pwnlab auth login
-      pwnlab session list
-      pwnlab session start dvwa-beginner
+      blaqliq auth login
+      blaqliq session list
+      blaqliq session start dvwa-beginner
     """
     pass
 
@@ -35,12 +35,12 @@ cli.add_command(ai)
 @click.option("--wargame", is_flag=True)
 @click.option("--blackbox", is_flag=True)
 def start_alias(scenario_id, wargame, blackbox):
-    """Shortcut for 'pwnlab session start'."""
-    from pwnlab.api_client import PwnLabClient, APIError
+    """Shortcut for 'blaqliq session start'."""
+    from blaqliq.api_client import BlaqLiqClient, APIError
     from rich.panel import Panel
     from rich import box
 
-    client = PwnLabClient()
+    client = BlaqLiqClient()
     with console.status(f"[bold]Starting {scenario_id}...[/bold]"):
         try:
             result = client.start_session(scenario_id, wargame=wargame, blackbox=blackbox)
@@ -49,15 +49,15 @@ def start_alias(scenario_id, wargame, blackbox):
             raise SystemExit(1)
 
     console.print(f"[green]✓[/green] Session started: [bold]{result['id']}[/bold]")
-    console.print(f"[dim]Attacker: docker exec -it pwnlab-attacker-{result['id'][:8]} bash[/dim]")
+    console.print(f"[dim]Attacker: docker exec -it blaqliq-attacker-{result['id'][:8]} bash[/dim]")
 
 
 @cli.command("stop")
 @click.argument("session_id")
 def stop_alias(session_id):
-    """Shortcut for 'pwnlab session stop'."""
-    from pwnlab.api_client import PwnLabClient, APIError
-    client = PwnLabClient()
+    """Shortcut for 'blaqliq session stop'."""
+    from blaqliq.api_client import BlaqLiqClient, APIError
+    client = BlaqLiqClient()
     with console.status(f"[bold]Stopping...[/bold]"):
         try:
             client.stop_session(session_id)

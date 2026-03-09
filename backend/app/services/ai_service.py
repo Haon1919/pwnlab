@@ -8,13 +8,13 @@ from app.services.scenario_loader import load_yaml, validate_scenario, ScenarioV
 
 logger = logging.getLogger(__name__)
 
-SCENARIO_PROMPT = """You are a pentest lab designer. Generate a valid PwnLab scenario YAML.
+SCENARIO_PROMPT = """You are a pentest lab designer. Generate a valid BlaqLiq scenario YAML.
 
 Rules:
 - Allowed images ONLY: {allowed_images}
 - Use subnet template "{base_subnet}.{{session_offset}}.0/24" literally (with curly braces)
 - Target IPs must be "{base_subnet}.{{session_offset}}.X" format
-- All flags must use PWNLAB{{}} format
+- All flags must use BLAQLIQ{{}} format
 - schema_version must be "1.0"
 - difficulty must be one of: beginner, intermediate, advanced, expert
 - attacker.tool_profile must be one of: web, network, crypto, full
@@ -63,7 +63,7 @@ async def generate_scenario(
 
     prompt_text = SCENARIO_PROMPT.format(
         allowed_images=", ".join(settings.allowed_images_list),
-        base_subnet=settings.PWNLAB_BASE_SUBNET,
+        base_subnet=settings.BLAQLIQ_BASE_SUBNET,
         prompt=prompt,
         difficulty=difficulty,
         tags=", ".join(tags or []),

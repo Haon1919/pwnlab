@@ -1,7 +1,7 @@
 #!/bin/bash
 # Monitor auditd for shell spawns and emit JSONL events
 
-OFFSET_FILE="/tmp/pwnlab-auditd-offset"
+OFFSET_FILE="/tmp/blaqliq-auditd-offset"
 AUDIT_LOG="/var/log/audit/audit.log"
 
 [ ! -f "$AUDIT_LOG" ] && exit 0

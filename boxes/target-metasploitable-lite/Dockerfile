@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 
-LABEL maintainer="pwnlab" \
-      description="PwnLab Metasploitable Lite - deliberately vulnerable"
+LABEL maintainer="blaqliq" \
+      description="BlaqLiq Metasploitable Lite - deliberately vulnerable"
 
 ENV DEBIAN_FRONTEND=noninteractive
 

@@ -1,8 +1,8 @@
 #!/bin/bash
-# PwnLab attacker base entrypoint
+# BlaqLiq attacker base entrypoint
 
 echo "╔══════════════════════════════════════════════════╗"
-echo "║          PwnLab Attacker Container               ║"
+echo "║          BlaqLiq Attacker Container               ║"
 echo "╚══════════════════════════════════════════════════╝"
 echo ""
 echo "Session ID: ${SESSION_ID:-unknown}"

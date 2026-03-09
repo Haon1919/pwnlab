@@ -9,13 +9,13 @@ from app.config import settings
 
 def test_resolve_template():
     # Test basic replacement
-    assert resolve_template("10.100.{session_offset}.10", 5) == f"{settings.PWNLAB_BASE_SUBNET}.5.10"
+    assert resolve_template("10.100.{session_offset}.10", 5) == f"{settings.BLAQLIQ_BASE_SUBNET}.5.10"
     
     # Test with different base subnet
-    original_subnet = settings.PWNLAB_BASE_SUBNET
-    settings.PWNLAB_BASE_SUBNET = "192.168"
+    original_subnet = settings.BLAQLIQ_BASE_SUBNET
+    settings.BLAQLIQ_BASE_SUBNET = "192.168"
     assert resolve_template("10.100.{session_offset}.10", 5) == "192.168.5.10"
-    settings.PWNLAB_BASE_SUBNET = original_subnet
+    settings.BLAQLIQ_BASE_SUBNET = original_subnet
 
 def test_apply_session_offset():
     data = {
@@ -28,9 +28,9 @@ def test_apply_session_offset():
     
     resolved = apply_session_offset(data, 42)
     
-    assert resolved["network"]["subnet"] == f"{settings.PWNLAB_BASE_SUBNET}.42.0/24"
-    assert resolved["targets"][0]["ip"] == f"{settings.PWNLAB_BASE_SUBNET}.42.10"
-    assert resolved["targets"][1]["ip"] == f"{settings.PWNLAB_BASE_SUBNET}.42.20"
+    assert resolved["network"]["subnet"] == f"{settings.BLAQLIQ_BASE_SUBNET}.42.0/24"
+    assert resolved["targets"][0]["ip"] == f"{settings.BLAQLIQ_BASE_SUBNET}.42.10"
+    assert resolved["targets"][1]["ip"] == f"{settings.BLAQLIQ_BASE_SUBNET}.42.20"
     
     # Ensure original data is not mutated
     assert data["network"]["subnet"] == "10.100.{session_offset}.0/24"
@@ -62,7 +62,7 @@ def test_validate_scenario_valid():
                 "id": "flag1",
                 "validation": {
                     "method": "flag_string",
-                    "value": "PWNLAB{test}"
+                    "value": "BLAQLIQ{test}"
                 }
             }
         ]
@@ -99,7 +99,7 @@ def test_validate_scenario_invalid_image():
                 "id": "flag1",
                 "validation": {
                     "method": "flag_string",
-                    "value": "PWNLAB{test}"
+                    "value": "BLAQLIQ{test}"
                 }
             }
         ]

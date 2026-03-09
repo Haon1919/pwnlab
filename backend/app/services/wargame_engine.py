@@ -35,8 +35,8 @@ def score_to_level(score: int) -> str:
 
 
 def parse_iptables_line(line: str) -> Optional[Dict[str, Any]]:
-    """Parse an iptables PWNLAB-DETECT log line."""
-    if "PWNLAB-DETECT" not in line:
+    """Parse an iptables BLAQLIQ-DETECT log line."""
+    if "BLAQLIQ-DETECT" not in line:
         return None
 
     event = {"type": "iptables_log", "raw": line}
@@ -162,7 +162,7 @@ async def poll_wargame(session_id: str, db: Session):
             detection_rules = wargame_cfg.get("detection_rules", {})
 
         # Read new events from sidecar volume
-        volume_path = f"/var/lib/docker/volumes/pwnlab-events-{session_id[:8]}/_data"
+        volume_path = f"/var/lib/docker/volumes/blaqliq-events-{session_id[:8]}/_data"
         last_offset = getattr(wargame_state, '_event_offset', 0)
 
         new_lines, new_offset = read_new_events(volume_path, last_offset)

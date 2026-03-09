@@ -25,7 +25,7 @@ export default function Layout() {
         <div className="flex items-center gap-3">
           <span className="text-green-400 font-bold text-xl flex items-center gap-2">
             <Shield size={20} className="text-green-400" />
-            PwnLab
+            BlaqLiq
           </span>
           <span className="text-gray-600 text-xs">v1.0</span>
         </div>

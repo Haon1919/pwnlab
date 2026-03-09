@@ -1,5 +1,5 @@
-# PwnLab Scenario Schema v1.0
-# This file documents the canonical YAML schema for all PwnLab scenarios.
+# BlaqLiq Scenario Schema v1.0
+# This file documents the canonical YAML schema for all BlaqLiq scenarios.
 # All scenarios (human-written or AI-generated) must conform to this schema.
 
 schema_version: "1.0"  # required
@@ -17,7 +17,7 @@ network:
 
 targets:                             # required; at least one
   - id: "target-id"                  # required; used in env vars (TARGET_<ID>_IP)
-    image: "pwnlab/target-dvwa:latest"  # required; must be in ALLOWED_TARGET_IMAGES whitelist
+    image: "blaqliq/target-dvwa:latest"  # required; must be in ALLOWED_TARGET_IMAGES whitelist
     ip: "10.100.{session_offset}.10"    # required; {session_offset} replaced at runtime
     mem_limit: "512m"                    # optional; default 512m
     cpu_quota: 50000                     # optional; default 50000
@@ -31,7 +31,7 @@ objectives:                         # required; at least one
     description: "Get admin access" # optional
     validation:
       method: "flag_string"         # required; currently only flag_string supported
-      value: "PWNLAB{flag_here}"   # required; flag to submit
+      value: "BLAQLIQ{flag_here}"   # required; flag to submit
 
 # wargame block is null/absent for standard scenarios
 wargame: null
@@ -46,7 +46,7 @@ wargame: null
 #       severity: "warning"         # warning|detected|busted
 #     bruteforce:
 #       backend: "fail2ban"
-#       config: "pwnlab-bruteforce.conf"
+#       config: "blaqliq-bruteforce.conf"
 #       severity: "detected"
 #     shell_spawn_by_webserver:
 #       backend: "auditd"

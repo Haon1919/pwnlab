@@ -1,5 +1,5 @@
 <?php
-# DVWA Configuration for PwnLab
+# DVWA Configuration for BlaqLiq
 # Security level starts at LOW for beginner scenarios
 
 $_DVWA = array();

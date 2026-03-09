@@ -26,11 +26,11 @@ objectives:
     description: "Exploit SQL injection to retrieve admin credentials"
     validation:
       method: "flag_string"
-      value: "PWNLAB{dvwa_admin_pwned}"
+      value: "BLAQLIQ{dvwa_admin_pwned}"
   - id: "flag-2"
     description: "Execute stored XSS to steal a session"
     validation:
       method: "flag_string"
-      value: "PWNLAB{xss_session_stolen}"
+      value: "BLAQLIQ{xss_session_stolen}"
 
 wargame: null

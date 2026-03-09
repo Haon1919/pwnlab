@@ -3,7 +3,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 from rich import box
-from pwnlab.api_client import PwnLabClient, APIError
+from blaqliq.api_client import BlaqLiqClient, APIError
 
 console = Console()
 
@@ -29,7 +29,7 @@ def session():
 @click.option("--kali", is_flag=True, help="Use Kali Linux attacker (pro+)")
 def start_session(scenario_id, wargame, blackbox, kali):
     """Start a lab session for SCENARIO_ID."""
-    client = PwnLabClient()
+    client = BlaqLiqClient()
 
     mode_str = " [war games]" if wargame else ""
     bb_str = " [blackbox]" if blackbox else ""
@@ -56,15 +56,15 @@ def start_session(scenario_id, wargame, blackbox, kali):
         panel_content += "\n[bold yellow]Target is hidden. Use nmap to discover.[/bold yellow]"
 
     console.print(Panel(panel_content, title="[bold green]Session Started[/bold green]", box=box.ROUNDED))
-    console.print(f"\n[dim]To connect to attacker: docker exec -it pwnlab-attacker-{result['id'][:8]} bash[/dim]")
-    console.print(f"[dim]To stop: pwnlab session stop {result['id']}[/dim]")
+    console.print(f"\n[dim]To connect to attacker: docker exec -it blaqliq-attacker-{result['id'][:8]} bash[/dim]")
+    console.print(f"[dim]To stop: blaqliq session stop {result['id']}[/dim]")
 
 
 @session.command("stop")
 @click.argument("session_id")
 def stop_session(session_id):
     """Stop a running session."""
-    client = PwnLabClient()
+    client = BlaqLiqClient()
 
     with console.status(f"[bold]Stopping session {session_id[:8]}...[/bold]"):
         try:
@@ -80,7 +80,7 @@ def stop_session(session_id):
 @click.argument("session_id", required=False)
 def session_status(session_id):
     """Show session status. If no ID given, lists all sessions."""
-    client = PwnLabClient()
+    client = BlaqLiqClient()
     try:
         if session_id:
             result = client.get_session(session_id)
@@ -144,7 +144,7 @@ def _print_session_detail(s: dict):
 @click.option("--objective", required=True, help="Objective ID to submit flag for")
 def submit_flag(session_id, flag_value, objective):
     """Submit a flag for a session objective."""
-    client = PwnLabClient()
+    client = BlaqLiqClient()
     try:
         result = client.submit_flag(session_id, flag_value, objective)
         if result["correct"]:
@@ -159,7 +159,7 @@ def submit_flag(session_id, flag_value, objective):
 @session.command("list")
 def list_scenarios_cmd():
     """List available scenarios."""
-    client = PwnLabClient()
+    client = BlaqLiqClient()
     try:
         scenarios = client.list_scenarios()
 

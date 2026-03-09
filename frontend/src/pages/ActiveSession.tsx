@@ -116,7 +116,7 @@ export default function ActiveSession() {
             Connect to Attacker
           </div>
           <div className="bg-gray-950 rounded p-3 font-mono text-xs text-green-400">
-            $ docker exec -it pwnlab-attacker-{shortId} bash
+            $ docker exec -it blaqliq-attacker-{shortId} bash
           </div>
         </div>
       )}
@@ -131,7 +131,7 @@ export default function ActiveSession() {
           <div className="flex gap-2">
             <input
               className="input-terminal text-sm flex-1"
-              placeholder="PWNLAB{...}"
+              placeholder="BLAQLIQ{...}"
               value={flagInput}
               onChange={(e) => setFlagInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && submitFlag()}

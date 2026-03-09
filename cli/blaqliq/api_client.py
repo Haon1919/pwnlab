@@ -1,6 +1,6 @@
 import httpx
 from typing import Optional, Any, Dict
-from pwnlab.config import get_api_url, get_token
+from blaqliq.config import get_api_url, get_token
 
 class APIError(Exception):
     def __init__(self, message: str, status_code: int = 0):
@@ -8,7 +8,7 @@ class APIError(Exception):
         self.status_code = status_code
 
 
-class PwnLabClient:
+class BlaqLiqClient:
     def __init__(self, base_url: Optional[str] = None, token: Optional[str] = None):
         self.base_url = base_url or get_api_url()
         self.token = token or get_token()

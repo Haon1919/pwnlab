@@ -1,5 +1,5 @@
 #!/bin/bash
-# PwnLab wargame detection sidecar main script
+# BlaqLiq wargame detection sidecar main script
 
 set -e
 
@@ -7,7 +7,7 @@ EVENTS_FILE="/events/events.jsonl"
 SESSION_ID="${SESSION_ID:-unknown}"
 POLL_INTERVAL=5
 
-echo "[sidecar] Starting PwnLab detection sidecar for session: $SESSION_ID"
+echo "[sidecar] Starting BlaqLiq detection sidecar for session: $SESSION_ID"
 
 # Setup iptables logging rules
 echo "[sidecar] Setting up iptables logging..."
@@ -23,7 +23,7 @@ fi
 if command -v auditd &>/dev/null; then
     echo "[sidecar] Starting auditd..."
     auditd -b || echo "[sidecar] auditd start failed"
-    # Load pwnlab rules
+    # Load blaqliq rules
     auditctl -w /bin/sh -p x -k shell_spawn_by_webserver 2>/dev/null || true
     auditctl -w /bin/bash -p x -k shell_spawn_by_webserver 2>/dev/null || true
 fi

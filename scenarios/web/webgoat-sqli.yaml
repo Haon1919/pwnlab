@@ -26,11 +26,11 @@ objectives:
     description: "Complete the SQL injection lesson to extract user data"
     validation:
       method: "flag_string"
-      value: "PWNLAB{webgoat_sqli_complete}"
+      value: "BLAQLIQ{webgoat_sqli_complete}"
   - id: "flag-2"
     description: "Bypass authentication using SQL injection"
     validation:
       method: "flag_string"
-      value: "PWNLAB{webgoat_auth_bypass}"
+      value: "BLAQLIQ{webgoat_auth_bypass}"
 
 wargame: null

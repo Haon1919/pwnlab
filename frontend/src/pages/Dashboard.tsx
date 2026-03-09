@@ -116,9 +116,9 @@ export default function Dashboard() {
           Launch a lab directly from the command line or pick a scenario from the library.
         </p>
         <div className="bg-gray-950 rounded p-3 font-mono text-xs text-green-400">
-          <div>$ pwnlab session start dvwa-beginner</div>
-          <div className="text-gray-600">$ pwnlab session start dvwa-hardened --wargame</div>
-          <div className="text-gray-600">$ pwnlab ai blackbox</div>
+          <div>$ blaqliq session start dvwa-beginner</div>
+          <div className="text-gray-600">$ blaqliq session start dvwa-hardened --wargame</div>
+          <div className="text-gray-600">$ blaqliq ai blackbox</div>
         </div>
         <Link to="/scenarios" className="btn-primary inline-block mt-3 text-sm">
           Browse Scenarios →

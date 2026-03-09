@@ -22,14 +22,14 @@ services:
     volumes:
       - ./backend:/app
       - ./scenarios:/app/scenarios:ro
-      - pwnlab-db:/app/data
+      - blaqliq-db:/app/data
     environment:
       - DOCKER_HOST=tcp://docker-proxy:2375
-      - DATABASE_URL=sqlite:////app/data/pwnlab.db
+      - DATABASE_URL=sqlite:////app/data/blaqliq.db
       - SCENARIOS_PATH=/app/scenarios
       - SECRET_KEY=${SECRET_KEY:-changeme-in-production-use-32-chars}
       - FERNET_KEY=${FERNET_KEY:-ZmDfcTF7_60GrrY167zsiPd67pEvs0aGOv2oasOM1Pg=}
-      - PWNLAB_ALLOWED_TARGET_IMAGES=${PWNLAB_ALLOWED_TARGET_IMAGES:-vulnerables/web-dvwa:latest,webgoat/goat-and-wolf:latest,pwnlab/target-metasploitable-lite:latest}
+      - BLAQLIQ_ALLOWED_TARGET_IMAGES=${BLAQLIQ_ALLOWED_TARGET_IMAGES:-vulnerables/web-dvwa:latest,webgoat/goat-and-wolf:latest,blaqliq/target-metasploitable-lite:latest}
       - SESSION_TIMEOUT_HOURS=${SESSION_TIMEOUT_HOURS:-4}
       - DEBUG=${DEBUG:-false}
     depends_on:
@@ -53,5 +53,5 @@ services:
     restart: unless-stopped
 
 volumes:
-  pwnlab-db:
-    name: pwnlab-db
+  blaqliq-db:
+    name: blaqliq-db

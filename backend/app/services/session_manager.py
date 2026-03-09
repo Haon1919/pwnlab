@@ -39,8 +39,8 @@ def get_attacker_image(tool_profile: str, kali: bool, user: User) -> str:
     if kali:
         if not limits["kali_access"]:
             raise PermissionError("Kali attacker requires pro or enterprise plan")
-        return settings.PWNLAB_ATTACKER_KALI_IMAGE
-    return settings.PWNLAB_ATTACKER_BASE_IMAGE
+        return settings.BLAQLIQ_ATTACKER_KALI_IMAGE
+    return settings.BLAQLIQ_ATTACKER_BASE_IMAGE
 
 async def create_session(
     scenario_id: str,
@@ -75,7 +75,7 @@ async def create_session(
 
     try:
         # Create Docker network
-        network_name = f"pwnlab-{session.id[:8]}"
+        network_name = f"blaqliq-{session.id[:8]}"
         subnet = resolved["network"]["subnet"]
         internal = resolved["network"].get("internal", True)
         docker_manager.create_network(network_name, subnet, internal=internal)
@@ -85,7 +85,7 @@ async def create_session(
 
         # Start target containers
         for target in resolved["targets"]:
-            cname = f"pwnlab-target-{target['id']}-{session.id[:8]}"
+            cname = f"blaqliq-target-{target['id']}-{session.id[:8]}"
             cid = docker_manager.run_target(
                 image=target["image"],
                 container_name=cname,
@@ -111,7 +111,7 @@ async def create_session(
                 env_key = f"TARGET_{target['id'].upper()}_IP"
                 env_vars[env_key] = target["ip"]
 
-        attacker_cname = f"pwnlab-attacker-{session.id[:8]}"
+        attacker_cname = f"blaqliq-attacker-{session.id[:8]}"
         attacker_cid = docker_manager.run_attacker(
             image=attacker_image,
             container_name=attacker_cname,
@@ -125,9 +125,9 @@ async def create_session(
 
         # Start wargame sidecar if needed
         if wargame and resolved.get("wargame", {}) and resolved["wargame"].get("enabled", False):
-            volume_name = f"pwnlab-events-{session.id[:8]}"
+            volume_name = f"blaqliq-events-{session.id[:8]}"
             docker_manager.create_volume(volume_name)
-            sidecar_cname = f"pwnlab-sidecar-{session.id[:8]}"
+            sidecar_cname = f"blaqliq-sidecar-{session.id[:8]}"
             sidecar_cid = docker_manager.run_wargame_sidecar(
                 container_name=sidecar_cname,
                 network_name=network_name,
@@ -153,7 +153,7 @@ async def create_session(
         try:
             docker_manager.teardown_session(
                 container_ids=session.container_ids,
-                network_name=session.docker_network_name or f"pwnlab-{session.id[:8]}",
+                network_name=session.docker_network_name or f"blaqliq-{session.id[:8]}",
             )
         except Exception as cleanup_err:
             logger.error(f"Cleanup error for session {session.id}: {cleanup_err}")
@@ -174,10 +174,10 @@ async def stop_session(session: LabSession, db: Session):
     db.commit()
 
     try:
-        volume_name = f"pwnlab-events-{session.id[:8]}" if session.mode == "wargame" else None
+        volume_name = f"blaqliq-events-{session.id[:8]}" if session.mode == "wargame" else None
         docker_manager.teardown_session(
             container_ids=session.container_ids,
-            network_name=session.docker_network_name or f"pwnlab-{session.id[:8]}",
+            network_name=session.docker_network_name or f"blaqliq-{session.id[:8]}",
             volume_name=volume_name,
         )
 

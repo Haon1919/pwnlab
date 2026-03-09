@@ -1,4 +1,4 @@
-# PwnLab auditd rules for detection
+# BlaqLiq auditd rules for detection
 # Monitor shell spawning by web server processes
 -w /bin/sh -p x -k shell_spawn_by_webserver
 -w /bin/bash -p x -k shell_spawn_by_webserver

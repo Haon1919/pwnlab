@@ -1,7 +1,7 @@
 FROM vulnerables/web-dvwa:latest
 
-LABEL maintainer="pwnlab" \
-      description="PwnLab DVWA target"
+LABEL maintainer="blaqliq" \
+      description="BlaqLiq DVWA target"
 
 # DVWA already fully configured in base image
 # Override to make it immediately exploitable (security=low)

@@ -35,4 +35,4 @@ class APIKey(SQLModel, table=True):
 
     @staticmethod
     def generate_raw_key() -> str:
-        return f"pwnlab_{secrets.token_urlsafe(32)}"
+        return f"blaqliq_{secrets.token_urlsafe(32)}"

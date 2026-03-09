@@ -34,7 +34,7 @@ class DockerManager:
                 driver="bridge",
                 internal=internal,
                 ipam=ipam_config,
-                labels={"pwnlab": "true", "managed": "true"},
+                labels={"blaqliq": "true", "managed": "true"},
             )
             logger.info(f"Created network {network_name} with subnet {subnet}")
             return network.id
@@ -68,7 +68,7 @@ class DockerManager:
                 mem_limit=mem_limit,
                 cpu_quota=cpu_quota,
                 network=network_name,
-                labels={"pwnlab": "true", "role": "target"},
+                labels={"blaqliq": "true", "role": "target"},
                 environment=environment or {},
                 extra_hosts=extra_hosts or {},
             )
@@ -108,7 +108,7 @@ class DockerManager:
                 cap_add=caps if caps else None,
                 mem_limit="1g",
                 network=network_name,
-                labels={"pwnlab": "true", "role": "attacker"},
+                labels={"blaqliq": "true", "role": "attacker"},
                 environment=environment or {},
             )
             network = self.client.networks.get(network_name)
@@ -131,7 +131,7 @@ class DockerManager:
         """Run wargame detection sidecar with NET_ADMIN capability."""
         try:
             container = self.client.containers.run(
-                image=settings.PWNLAB_WARGAME_SIDECAR_IMAGE,
+                image=settings.BLAQLIQ_WARGAME_SIDECAR_IMAGE,
                 name=container_name,
                 detach=True,
                 remove=False,
@@ -139,7 +139,7 @@ class DockerManager:
                 network_mode=f"container:{target_container_id}",
                 pid_mode=f"container:{target_container_id}",
                 volumes_from=[target_container_id],
-                labels={"pwnlab": "true", "role": "sidecar"},
+                labels={"blaqliq": "true", "role": "sidecar"},
                 environment={"SESSION_ID": session_id},
                 volumes={events_volume: {"bind": "/events", "mode": "rw"}},
             )
@@ -153,7 +153,7 @@ class DockerManager:
         """Create a named Docker volume."""
         volume = self.client.volumes.create(
             name=volume_name,
-            labels={"pwnlab": "true"},
+            labels={"blaqliq": "true"},
         )
         return volume.name
 
@@ -205,19 +205,19 @@ class DockerManager:
                 pass
 
     def cleanup_stale_sessions(self, active_container_ids: List[str]):
-        """Remove any pwnlab containers not in the active list."""
-        containers = self.client.containers.list(filters={"label": "pwnlab=true"})
+        """Remove any blaqliq containers not in the active list."""
+        containers = self.client.containers.list(filters={"label": "blaqliq=true"})
         for c in containers:
             if c.id not in active_container_ids:
                 logger.info(f"Cleaning up stale container {c.name}")
                 self.stop_container(c.id)
 
     def cleanup_orphaned_resources(self, active_session_ids: List[str]):
-        """Remove any pwnlab networks and volumes not associated with active sessions."""
+        """Remove any blaqliq networks and volumes not associated with active sessions."""
         # Cleanup networks
-        networks = self.client.networks.list(filters={"label": "pwnlab=true"})
+        networks = self.client.networks.list(filters={"label": "blaqliq=true"})
         for net in networks:
-            # Network names are like pwnlab-{session_id[:8]}
+            # Network names are like blaqliq-{session_id[:8]}
             is_active = any(net.name.endswith(sid[:8]) for sid in active_session_ids)
             if not is_active:
                 logger.info(f"Cleaning up orphaned network {net.name}")
@@ -227,9 +227,9 @@ class DockerManager:
                     logger.error(f"Error removing orphaned network {net.name}: {e}")
 
         # Cleanup volumes
-        volumes = self.client.volumes.list(filters={"label": "pwnlab=true"})
+        volumes = self.client.volumes.list(filters={"label": "blaqliq=true"})
         for vol in volumes:
-            # Volume names are like pwnlab-events-{session_id[:8]}
+            # Volume names are like blaqliq-events-{session_id[:8]}
             is_active = any(vol.name.endswith(sid[:8]) for sid in active_session_ids)
             if not is_active:
                 logger.info(f"Cleaning up orphaned volume {vol.name}")
